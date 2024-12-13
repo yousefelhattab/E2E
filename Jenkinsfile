@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'Docker'  // Replace with your Docker Hub credentials ID
+        DOCKER_CREDENTIALS_ID = 'githubid'  // Replace with your Docker Hub credentials ID
         IMAGE_NAME = 'yousefelhattab/project'     // Replace with your Docker Hub username and image name
     }
 
