@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lightweight-go-app
+  labels:
+    app: lightweight-go-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: lightweight-go-app
+  template:
+    metadata:
+      labels:
+        app: lightweight-go-app
+    spec:
+      containers:
+      - name: lightweight-go-app
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: {{ .Values.service.targetPort }}

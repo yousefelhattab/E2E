@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -33,6 +32,33 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Helm Chart') {
+            steps {
+                script {
+                    // Ensure Helm is installed and Helm repos are added
+                    sh 'helm repo add stable https://charts.helm.sh/stable'
+                    sh 'helm repo add prometheus-community https://prometheus-community.github.io/helm-charts'
+                    sh 'helm repo add grafana https://grafana.github.io/helm-charts'
+                    sh 'helm repo update'
+
+                    // Deploy Helm Chart
+                    sh 'helm upgrade --install my-helm-chart helm-chart/ --values helm-chart/values.yaml'
+
+                    // Deploy Prometheus and Grafana
+                    sh 'helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace'
+                    sh 'helm upgrade --install grafana grafana/grafana --namespace monitoring --set adminPassword=myadminpassword'
+                }
+            }
+        }
+
+        stage('Check Deployment') {
+            steps {
+                script {
+                    sh 'kubectl get deployments'
+                    sh 'kubectl get services'
+                }
+            }
+        }
     }
 }
-

@@ -1,0 +1,10 @@
+image:
+  repository: yousefelhattab/project
+  tag: latest
+
+replicaCount: 2
+
+service:
+  type: NodePort
+  port: 3000
+  targetPort: 3000

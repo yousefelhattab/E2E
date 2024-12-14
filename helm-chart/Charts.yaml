@@ -1,0 +1,6 @@
+apiVersion: v2
+name: lightweight-go-app
+description: A Helm chart for deploying a lightweight Go app
+type: application
+version: 1.0.0
+appVersion: 1.0.0
