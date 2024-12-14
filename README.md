@@ -7,6 +7,10 @@
 
 The **Lightweight Go Application** is a simple yet powerful web server designed to be deployed and managed efficiently using Kubernetes and Helm. Built with scalability and observability in mind, this project aims to provide a streamlined solution that integrates containerization, continuous integration, continuous deployment (CI/CD), and monitoring using Prometheus and Grafana.
 
+## Workflow Diagram
+
+![Workflow Diagram](photo.png)
+
 ## Features
 
 - **Simple Web Server**: A lightweight Go application that runs on port 3000, responding to HTTP requests.
