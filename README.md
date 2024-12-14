@@ -2,21 +2,6 @@
 
 ---
 
-# Lightweight Go Application
-  +---------------------+      +----------------------+
-  | Dockerfile (Go App)   |      | Build & Push Docker  |
-  |                     ↓    |      | Image to Docker Hub  |
-  | Build Docker Image    |      +----------------------+
-  |     +----------------+     ↓
-  |     | docker build    |    +---------------------+
-  |     +----------------+    | Helm Chart Deployment |
-  |     ↑                   ↓   | +------------------+ |
-  | Push Docker Image       |   | helm install       | |
-  +-------------------------+   | helm upgrade       | |
-                                  | +----------------+ |
-                                  | | Prometheus      | |
-                                  | | Grafana          | |
-                                  +------------------+
 
 ## Overview
 
