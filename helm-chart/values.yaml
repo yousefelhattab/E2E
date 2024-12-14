@@ -8,3 +8,20 @@ service:
   type: NodePort
   port: 3000
   targetPort: 3000
+
+prometheus:
+  server:
+    enabled: true
+    replicas: 2
+    external:
+      http:
+        port: 9090
+
+adminUser: admin
+adminPassword: myadminpassword
+persistence:
+  enabled: true
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"

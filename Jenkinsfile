@@ -3,7 +3,8 @@ pipeline {
 
     environment {
         DOCKER_CREDENTIALS_ID = 'githubid'  // Replace with your Docker Hub credentials ID
-        IMAGE_NAME = 'yousefelhattab/project'     // Replace with your Docker Hub username and image name
+        IMAGE_NAME = 'yousefelhattab/project'  // Replace with your Docker Hub username and image name
+        PROMETHEUS_ADMIN_PASSWORD = 'myadminpassword'  // Define Prometheus admin password
     }
 
     stages {
@@ -42,12 +43,12 @@ pipeline {
                     sh 'helm repo add grafana https://grafana.github.io/helm-charts'
                     sh 'helm repo update'
 
-                    // Deploy Helm Chart
+                    // Deploy Helm Chart (MY gO application)
                     sh 'helm upgrade --install my-helm-chart helm-chart/ --values helm-chart/values.yaml'
 
                     // Deploy Prometheus and Grafana
-                    sh 'helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace'
-                    sh 'helm upgrade --install grafana grafana/grafana --namespace monitoring --set adminPassword=myadminpassword'
+                    sh 'helm upgrade --install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --create-namespace --values helm-chart/templates/prometheus-values.yaml'
+                    sh 'helm upgrade --install grafana grafana/grafana --namespace monitoring --set adminPassword=${PROMETHEUS_ADMIN_PASSWORD} --values helm-chart/templates/grafana-values.yaml'
                 }
             }
         }
@@ -55,8 +56,29 @@ pipeline {
         stage('Check Deployment') {
             steps {
                 script {
-                    sh 'kubectl get deployments'
-                    sh 'kubectl get services'
+                    // Check deployments and services
+                    sh 'kubectl get deployments -n monitoring'
+                    sh 'kubectl get services -n monitoring'
+                }
+            }
+        }
+
+        stage('Port Forward for Prometheus & Grafana') {
+            steps {
+                script {
+                    // Port forwarding Prometheus and Grafana
+                    sh 'kubectl port-forward service/prometheus-server 9090:9090 -n monitoring &'  // Prometheus
+                    sh 'kubectl port-forward service/grafana 3000:80 -n monitoring &'  // Grafana
+                }
+            }
+        }
+
+        stage('Verify Prometheus & Grafana') {
+            steps {
+                script {
+                    // Verify Prometheus and Grafana are accessible
+                    sh 'curl http://localhost:9090'   // Prometheus
+                    sh 'curl http://localhost:3000'   // Grafana
                 }
             }
         }
